@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oslo–Tromsø Family Trip Plan</title>
+<style>
+  :root {
+    --bg: #f9f7f2;
+    --card: #ffffff;
+    --text: #2a2825;
+    --muted: #6b6960;
+    --border: #e2dfd6;
+    --blue: #1a5fa8;
+    --blue-light: #e8f1fb;
+    --teal: #0f6e56;
+    --teal-light: #e1f5ee;
+    --amber: #9a5f0a;
+    --amber-light: #fef3dc;
+    --coral: #993c1d;
+    --coral-light: #faece7;
+    --purple: #4a3baa;
+    --purple-light: #f0effe;
+    --green: #3a6d10;
+    --green-light: #eaf3de;
+    --red: #a32d2d;
+    --red-light: #fcebeb;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1916;
+      --card: #242320;
+      --text: #e8e5dc;
+      --muted: #9b9890;
+      --border: #3a3830;
+      --blue: #6aabf0;
+      --blue-light: #0c2d4a;
+      --teal: #4dcca4;
+      --teal-light: #083428;
+      --amber: #f0b040;
+      --amber-light: #3a2200;
+      --coral: #f09070;
+      --coral-light: #3a1a0a;
+      --purple: #a090f0;
+      --purple-light: #1e1845;
+      --green: #8dcc45;
+      --green-light: #1a2e05;
+      --red: #f07070;
+      --red-light: #2a1010;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  h2 { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+  h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--card); color: var(--muted); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .section { display: none; }
+  .section.active { display: block; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 14px; }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .pill-blue { background: var(--blue-light); color: var(--blue); }
+  .pill-teal { background: var(--teal-light); color: var(--teal); }
+  .pill-amber { background: var(--amber-light); color: var(--amber); }
+  .pill-coral { background: var(--coral-light); color: var(--coral); }
+  .pill-green { background: var(--green-light); color: var(--green); }
+  .pill-purple { background: var(--purple-light); color: var(--purple); }
+  .pill-red { background: var(--red-light); color: var(--red); }
+  .day-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .day-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .day-oslo { background: var(--blue-light); color: var(--blue); }
+  .day-transit { background: var(--amber-light); color: var(--amber); }
+  .day-tromso { background: var(--teal-light); color: var(--teal); }
+  .timeline-item { border-left: 2px solid var(--border); padding-left: 14px; margin-left: 10px; padding-bottom: 12px; position: relative; }
+  .timeline-item:last-child { padding-bottom: 0; }
+  .timeline-dot { width: 8px; height: 8px; border-radius: 50%; position: absolute; left: -5px; top: 6px; }
+  .dot-blue { background: var(--blue); }
+  .dot-teal { background: var(--teal); }
+  .dot-amber { background: var(--amber); }
+  .timeline-time { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .timeline-desc { font-size: 14px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 580px) { .grid-2 { grid-template-columns: 1fr; } }
+  .activity-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .activity-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .meta-item { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 3px; }
+  .highlight-box { border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+  .highlight-blue { background: var(--blue-light); border-left: 3px solid var(--blue); }
+  .highlight-amber { background: var(--amber-light); border-left: 3px solid var(--amber); }
+  .highlight-teal { background: var(--teal-light); border-left: 3px solid var(--teal); }
+  .highlight-coral { background: var(--coral-light); border-left: 3px solid var(--coral); }
+  .period-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .period-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .period-badge { min-width: 60px; text-align: center; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; padding: 8px 10px; background: var(--blue-light); color: var(--blue); font-weight: 600; font-size: 12px; border-bottom: 1px solid var(--border); }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .food-icon { font-size: 18px; }
+  .star { color: #f59e0b; }
+  .budget-total { background: var(--blue-light); border-radius: 10px; padding: 14px 18px; margin-top: 16px; }
+  .budget-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .budget-row:last-child { border-bottom: none; font-weight: 700; }
+  .tip-box { background: var(--card); border: 1px dashed var(--amber); border-radius: 10px; padding: 12px 16px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+  .tip-box strong { color: var(--amber); }
+  details summary { cursor: pointer; font-weight: 600; color: var(--blue); font-size: 14px; padding: 8px 0; list-style: none; }
+  details summary::before { content: '▶ '; font-size: 10px; }
+  details[open] summary::before { content: '▼ '; }
+  details .detail-content { padding: 8px 0 4px 16px; font-size: 14px; color: var(--muted); }
+  .aurora-bar { height: 12px; border-radius: 6px; background: linear-gradient(90deg, #1a3a6b, #2d5fa8, #3b8bd4, #4dcca4, #a0e0c8); margin-top: 4px; }
+  .month-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 10px; }
+  @media (max-width: 500px) { .month-grid { grid-template-columns: repeat(3, 1fr); } }
+  .month-cell { text-align: center; padding: 8px 4px; border-radius: 8px; font-size: 12px; }
+  .month-best { background: var(--teal-light); color: var(--teal); font-weight: 700; }
+  .month-good { background: var(--blue-light); color: var(--blue); }
+  .month-ok { background: var(--amber-light); color: var(--amber); }
+  .month-no { background: var(--border); color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🇳🇴 Oslo → Tromsø Family Trip</h1>
+<p class="subtitle">11-day plan for a Thai family of 4 from Chiang Mai · Kids aged 4 & 8 · Aurora-focused · Budget-conscious · No car rental</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('overview')">Overview</button>
+  <button class="tab" onclick="show('flights')">✈ Flights</button>
+  <button class="tab" onclick="show('itinerary')">📅 Day-by-Day</button>
+  <button class="tab" onclick="show('activities')">🎯 Activities</button>
+  <button class="tab" onclick="show('food')">🍜 Food</button>
+  <button class="tab" onclick="show('hotels')">🏨 Hotels</button>
+  <button class="tab" onclick="show('aurora')">🌌 Aurora Tips</button>
+  <button class="tab" onclick="show('budget')">💰 Budget</button>
+</div>
+
+<!-- OVERVIEW -->
+<div id="overview" class="section active">
+  <div class="highlight-box highlight-amber">
+    <h3>🌟 Best Time to Visit</h3>
+    <p style="font-size:14px; margin-top:6px;">We recommend <strong>late October – early November</strong> or <strong>February – mid-March</strong> as the sweet spot for this family. These windows give you long dark nights for aurora, tolerable cold, daytime activities still visible, and some daylight for sightseeing. Right now (2025–2026), solar activity is at its <strong>peak in 11 years</strong>, making aurora chances especially high.</p>
+  </div>
+
+  <div class="card">
+    <h2>Aurora Season by Month</h2>
+    <div class="month-grid">
+      <div class="month-cell month-ok">Sep<br><span>🌌 early</span></div>
+      <div class="month-cell month-good">Oct<br><span>🌌🌌</span></div>
+      <div class="month-cell month-best">Nov<br><span>🌌🌌🌌</span></div>
+      <div class="month-cell month-best">Dec<br><span>🌌🌌🌌</span></div>
+      <div class="month-cell month-best">Jan<br><span>🌌🌌🌌</span></div>
+      <div class="month-cell month-best">Feb<br><span>🌌🌌🌌</span></div>
+      <div class="month-cell month-best">Mar<br><span>🌌🌌🌌</span></div>
+      <div class="month-cell month-ok">Apr<br><span>🌌 early</span></div>
+      <div class="month-cell month-no">May<br><span>❌ midnight sun</span></div>
+      <div class="month-cell month-no">Jun–Aug<br><span>❌</span></div>
+    </div>
+    <p style="font-size:12px; color:var(--muted); margin-top:10px;">Peak season Nov–Feb has polar night (sun never rises) — maximises dark sky time. March is ideal for families: longer daylight returns, still cold, snow activities available, high aurora chance, and equinox effect may boost activity.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>📍 Trip Structure</h3>
+      <p style="font-size:14px; margin-top:6px; color:var(--muted);">
+        Days 1–2: Travel (Chiang Mai → Oslo)<br>
+        Days 3–5: Oslo (3 nights)<br>
+        Day 6: Oslo → Tromsø (fly)<br>
+        Days 6–10: Tromsø (5 nights)<br>
+        Day 11: Tromsø → Oslo → Bangkok → CNX
+      </p>
+    </div>
+    <div class="card">
+      <h3>👨‍👩‍👧‍👦 Family Notes</h3>
+      <p style="font-size:14px; margin-top:6px; color:var(--muted);">
+        Child aged 4: most tours age 3+<br>
+        Child aged 8: all tours available<br>
+        English widely spoken in Norway<br>
+        Google Translate works for menus<br>
+        Norway is very child-friendly
+      </p>
+    </div>
+  </div>
+
+  <div class="highlight-box highlight-teal">
+    <h3>🇹🇭 What's Rare & Exciting for Thai Visitors</h3>
+    <p style="font-size:14px; margin-top:6px;">Seeing the Northern Lights, dog sledding with huskies, reindeer sledding, meeting indigenous Sámi people, standing inside an ice structure, experiencing polar night / near-darkness at noon, encountering reindeer up close, and walking on frozen fjord snow — none of these exist anywhere near Southeast Asia. This is a genuinely once-in-a-lifetime trip for most Thai families.</p>
+  </div>
+</div>
+
+<!-- FLIGHTS -->
+<div id="flights" class="section">
+  <div class="card">
+    <h2>✈️ Getting to Oslo from Chiang Mai</h2>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:14px;">No direct flight exists from CNX to OSL. Best route: fly CNX → BKK first (1 hr), then BKK → OSL. <strong>Thai Airways</strong> is the top recommendation — they fly Bangkok → Oslo direct (about 11–12 hrs), so you avoid a long European transit. Thai-speaking crew, Thai food, familiar service.</p>
+    
+    <table>
+      <tr><th>Option</th><th>Route</th><th>Total Time</th><th>Est. Round Trip/Person</th><th>Notes</th></tr>
+      <tr>
+        <td><strong>🥇 Best</strong><br><span class="pill pill-teal">Recommended</span></td>
+        <td>CNX → BKK (THAI) → OSL (THAI direct)</td>
+        <td>~14 hrs total</td>
+        <td>~$1,200–1,400 USD</td>
+        <td>Thai crew, direct BKK–OSL, familiar experience</td>
+      </tr>
+      <tr>
+        <td><strong>🥈 Budget</strong></td>
+        <td>CNX → BKK → Doha → OSL (Qatar)</td>
+        <td>~16–18 hrs</td>
+        <td>~$750–900 USD</td>
+        <td>One transit, shorter transit usually 2–3 hrs in Doha</td>
+      </tr>
+      <tr>
+        <td><strong>🥉 Cheapest</strong></td>
+        <td>CNX → BKK → (various EU hub) → OSL</td>
+        <td>~18–22 hrs</td>
+        <td>~$600–800 USD</td>
+        <td>Turkish, Emirates, Lufthansa via hub — longer but cheaper</td>
+      </tr>
+    </table>
+
+    <div class="tip-box" style="margin-top:12px;">
+      <strong>💡 Tip:</strong> Book at least 3 months ahead, especially for winter peak season (Nov–Feb). Midweek (Tue/Wed) departures are typically cheaper. For CNX→BKK, AirAsia or Thai Lion Air are cheap (~$30–50 USD one-way). Book separately for flexibility.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🛫 Oslo → Tromsø (Domestic)</h2>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:12px;">There is <strong>no train to Tromsø</strong>. Flying is the only practical option for families with young children.</p>
+    <div class="highlight-box highlight-blue">
+      <strong>SAS or Norwegian Airlines</strong> — both fly Oslo (OSL) → Tromsø (TOS) directly. Flight time ~1h 50 min. Around 10–12 flights per day combined. Book in advance for ~800–1,200 NOK (~$75–115 USD) one-way per person. Last-minute can reach $150–200+.
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin-top:8px;">Tromsø airport (TOS) is only 4 km from city center. Bus route 40 runs to downtown for ~45 NOK (~$4 USD) per adult. Kids under 6 free, kids 6–15 half price.</p>
+
+    <div class="tip-box">
+      <strong>💡 Alternative scenic option (add 1–2 days):</strong> Take the Hurtigruten coastal ferry from Bergen to Tromsø (5 days). This is spectacular but adds time and cost. Not recommended for the core plan, but worth noting as an upgrade if you have 13 days.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🚌 Getting Around Without a Car</h2>
+    <p style="font-size:14px; color:var(--muted);">Both Oslo and Tromsø are very walkable and have excellent public transit. Good news: nearly all popular Tromsø winter tours <strong>include hotel pickup and drop-off</strong>, so you genuinely don't need a car for this type of trip.</p>
+    <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
+      <div style="display:flex; gap:8px; align-items:flex-start;">
+        <span class="pill pill-blue">Oslo</span>
+        <span style="font-size:14px;">T-bane (metro), tram, bus, ferry. <strong>Oslo Pass</strong> (24/48/72 hr) covers all public transit + free museum entry — excellent value for tourists. ~350–650 NOK adult, 175–325 NOK child.</span>
+      </div>
+      <div style="display:flex; gap:8px; align-items:flex-start;">
+        <span class="pill pill-teal">Tromsø</span>
+        <span style="font-size:14px;">City bus runs regularly. Most hotels are central. Tour operators pick up from hotels. Fjellheisen cable car is a 5-min taxi/bus from center. Tromsø is a small compact city — many things walkable.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ITINERARY -->
+<div id="itinerary" class="section">
+  <div class="highlight-box highlight-amber">
+    <strong>📌 Sample itinerary for late October or February–March (11 days total)</strong><br>
+    <span style="font-size:13px;">Adjust aurora activities based on forecast — always keep 1 "buffer" evening free for spontaneous aurora chasing if skies are clear unexpectedly.</span>
+  </div>
+
+  <!-- Day 1 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-transit">D1</div><div><strong>Departure Day — Chiang Mai</strong><br><span class="pill pill-amber">Travel</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-amber"></div><div class="timeline-time">Afternoon/Evening</div><div class="timeline-desc">CNX → BKK (~1 hr). Evening: BKK → OSL (if flying Thai direct, departs ~9–11 PM Bangkok time)</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-amber"></div><div class="timeline-time">Tip</div><div class="timeline-desc">Arrive BKK early, rest at airport or city hotel. Kids-friendly: BKK airport has good food courts, kids play zone.</div></div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-transit">D2</div><div><strong>Arrive Oslo</strong><br><span class="pill pill-blue">Oslo</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Morning</div><div class="timeline-desc">Land Oslo Gardermoen. Airport Express Train (Flytoget) to Oslo central — 20 min, ~220 NOK adult. Check in to hotel. Rest and recover from jet lag.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Afternoon</div><div class="timeline-desc">Easy walk around Aker Brygge waterfront / Karl Johans gate (main street). Grab dinner at a supermarket (Rema 1000, Kiwi, or MENY) to save money and adjust schedules.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Evening</div><div class="timeline-desc">Early bedtime to reset body clocks. Oslo is 5–6 hrs behind Bangkok.</div></div>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-oslo">D3</div><div><strong>Oslo: Bygdøy Peninsula Museums</strong><br><span class="pill pill-blue">Oslo</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Morning 9:30</div><div class="timeline-desc">Take the seasonal ferry from Rådhusbryggen (City Hall pier) to Bygdøy Peninsula. <strong>Fram Museum</strong> — polar exploration ship, kids love the actual boat and Arctic animals section. Interactive, not boring. ~130 NOK adult, ~65 NOK child.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Lunch</div><div class="timeline-desc">Packed lunch from supermarket, or café at Bygdøy.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Afternoon</div><div class="timeline-desc"><strong>Kon-Tiki Museum</strong> — Thor Heyerdahl's raft across the Pacific. Both kids and adults find this fascinating. The 8-year-old especially. ~130 NOK adult.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Evening</div><div class="timeline-desc">Ferry back. Dinner near Aker Brygge or try a Thai restaurant (Oslo has several decent ones if kids miss home food).</div></div>
+  </div>
+
+  <!-- Day 4 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-oslo">D4</div><div><strong>Oslo: History, Castle & City</strong><br><span class="pill pill-blue">Oslo</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Morning 10:00</div><div class="timeline-desc"><strong>Akershus Fortress</strong> — a medieval castle right in the city center with Oslo Fjord views. Free to walk the grounds. Kids can explore walls and towers. One of Norway's best-preserved medieval fortresses.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Noon</div><div class="timeline-desc">Walk to <strong>Oslo City Hall</strong> — exterior is iconic, lobby is free. Then stroll along the waterfront.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Afternoon</div><div class="timeline-desc"><strong>The Viking Planet</strong> — interactive digital Viking museum. VR experience, holograms, kid-friendly. Note: the original Viking Ship Museum is closed for renovation until 2027. The Viking Planet is the best alternative. ~$91 USD per family. Spend 2 hrs.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Evening</div><div class="timeline-desc">Stroll Karl Johans gate. Get a pølse (Norwegian hot dog) from a street cart. Let kids run around Spikersuppa (central square fountain area).</div></div>
+  </div>
+
+  <!-- Day 5 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-oslo">D5</div><div><strong>Oslo: Vigeland Park + Optional Holmenkollen</strong><br><span class="pill pill-blue">Oslo</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Morning</div><div class="timeline-desc"><strong>Vigeland Sculpture Park</strong> — free, 80 acres, 200+ bronze and granite sculptures including the famous Monolith. Kids love the playground within the park. Pack snacks. Free entry.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Afternoon (optional)</div><div class="timeline-desc"><strong>Holmenkollen Ski Jump</strong> — T-bane line 1 to the top. Even if not skiing season, the view and the jump itself are breathtaking. Museum is optional (skip it — the view is the point). ~150 NOK adult, ~75 NOK child for museum; jump view from outside is free.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-blue"></div><div class="timeline-time">Evening</div><div class="timeline-desc">Pack for Tromsø. Shop at pharmacy / supermarket for essentials (thermal layers, kids snacks). Norwegian supermarkets (Rema 1000, Kiwi) are cheap and well-stocked.</div></div>
+  </div>
+
+  <!-- Day 6 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-transit">D6</div><div><strong>Fly to Tromsø + Arrive in the Arctic</strong><br><span class="pill pill-amber">Transit</span> <span class="pill pill-teal">Tromsø</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-amber"></div><div class="timeline-time">Morning</div><div class="timeline-desc">Morning flight Oslo → Tromsø (~1h 50min). Book first flight of the day to maximize time. Check in to hotel.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Afternoon</div><div class="timeline-desc"><strong>Tromsø city orientation walk</strong>. Visit <strong>Arctic Cathedral</strong> (the iconic triangular church — ~100 NOK adult). Walk across the bridge over the sound. Grab supplies at a supermarket (Coop Extra or Rema 1000 in city center).</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Evening</div><div class="timeline-desc"><strong>First Aurora Watch</strong> — check the aurora forecast app (Aurora Forecast or Space Weather Live). If KP ≥ 2 and skies are clear, walk to low-light-pollution spots near the bridge. Or book an Aurora Safari tonight if forecast is strong.</div></div>
+  </div>
+
+  <!-- Day 7 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-tromso">D7</div><div><strong>Tromsø: Cable Car + Polar Museum</strong><br><span class="pill pill-teal">Tromsø</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Morning 10:00</div><div class="timeline-desc"><strong>Fjellheisen Cable Car</strong> — rides up Mt. Storsteinen (421 m). Panoramic view of the Arctic city, fjords, and islands. Kids love it. In winter, the top is a snow wonderland. ~285 NOK adult, ~145 NOK child. Shuttle bus available from center.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Afternoon</div><div class="timeline-desc"><strong>Polar Museum (Polarmuseet)</strong> — history of Arctic exploration and hunting. Interesting for the 8-year-old. Polar bear skeletons, old equipment, Amundsen artifacts. ~100 NOK adult, children free or reduced. 1–1.5 hrs.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Evening</div><div class="timeline-desc"><strong>Aurora Safari by bus</strong> — book with Best Arctic or Hello Tromsø. Guides chase clear skies using weather maps. ~960–1,200 NOK per adult. Min age 4. Thermal suits, hot drinks, campfire. ~3–4 hrs.</div></div>
+  </div>
+
+  <!-- Day 8 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-tromso">D8</div><div><strong>Tromsø: Reindeer & Sámi Culture</strong><br><span class="pill pill-teal">Tromsø</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Morning 10:00</div><div class="timeline-desc"><strong>Reindeer + Sámi Culture Day Tour</strong> — meet indigenous Sámi guides, feed ~200 reindeer by hand, try reindeer sled ride, learn about Sámi joik singing and traditions. Lunch included. Duration ~4 hrs. ~1,800–2,245 NOK per adult, children often half-price or free under 4. This is genuinely unlike anything available in Southeast Asia.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Afternoon</div><div class="timeline-desc">Rest. Tromsø Science Center if kids have energy (interactive hands-on science exhibits, designed for children). ~100 NOK adult, ~80 NOK child. Planetarium shows available.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Evening</div><div class="timeline-desc">Supermarket dinner + aurora watch from hotel roof or nearby pier if skies are clear. Check app. Or book a second aurora safari — guides often have higher success on their second attempt with the same group.</div></div>
+  </div>
+
+  <!-- Day 9 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-tromso">D9</div><div><strong>Tromsø: Husky Dog Sledding</strong><br><span class="pill pill-teal">Tromsø</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Morning 9:00</div><div class="timeline-desc"><strong>Husky Dog Sledding</strong> — full 4-hr tour with hotel transfer. Kids aged 5+ can ride as passengers on the sled (musher drives). Includes warm thermal suit, meeting ~200 huskies, 1 hr sled ride through snowy forests, hot soup lunch. ~2,490–2,790 NOK per adult. Children often 50–60% price. All-inclusive. <span class="pill pill-coral">Top activity</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Afternoon</div><div class="timeline-desc">Return to city. Rest for the kids. Walk the harbor. Grab a waffle at a café (Norwegian waffles are excellent). Try the world's northernmost university area for a coffee.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Evening</div><div class="timeline-desc"><strong>Northern Lights Fjord Cruise</strong> (optional alternative night) — if you want a different aurora experience, an electric catamaran cruise removes light pollution entirely. ~950–1,890 NOK per adult. Min age usually 3+.</div></div>
+  </div>
+
+  <!-- Day 10 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-tromso">D10</div><div><strong>Tromsø: Optional Activities + Final Aurora</strong><br><span class="pill pill-teal">Tromsø</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Morning</div><div class="timeline-desc">Choose based on kids' energy: <strong>Polaria Aquarium</strong> (world's northernmost aquarium, seal shows — 150 NOK adult, children free/reduced), or snowshoe hike, or sleep in and relax. Also great for souvenir shopping on Storgata street.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Afternoon</div><div class="timeline-desc">Visit the <strong>Tromsø University Museum</strong> for arctic nature and Sámi culture exhibits (100 NOK adult). Or if it's snowy, take kids to any hill near Fjellheisen base for sledding on rented plastic sleds (~50 NOK rental).</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-teal"></div><div class="timeline-time">Evening</div><div class="timeline-desc"><strong>Final Aurora attempt</strong> — last chance. If previous nights were cloudy, consider booking a private minibus tour (more flexible). Pack bags. Celebrate the trip with a nice Norwegian meal (reindeer stew, fish soup).</div></div>
+  </div>
+
+  <!-- Day 11 -->
+  <div class="card">
+    <div class="day-header"><div class="day-num day-transit">D11</div><div><strong>Departure — Tromsø to Home</strong><br><span class="pill pill-amber">Travel</span></div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-amber"></div><div class="timeline-time">Morning</div><div class="timeline-desc">Check out. Fly TOS → OSL (connect). Depending on schedule: OSL → BKK → CNX. Direct THAI flight or connect via Qatar/Emirates. Total travel home ~16–20 hrs.</div></div>
+    <div class="timeline-item"><div class="timeline-dot dot-amber"></div><div class="timeline-time">Tip</div><div class="timeline-desc">Oslo airport (Gardermoen) has great shopping and a kids play area on departure level. Get some Norwegian chocolate (Freia) for gifts — it's a local institution.</div></div>
+  </div>
+</div>
+
+<!-- ACTIVITIES -->
+<div id="activities" class="section">
+  <div class="highlight-box highlight-teal">
+    <strong>⭐ Priority for Thai families:</strong> Focus on experiences that are physically impossible to have in Thailand or anywhere in Southeast Asia — polar night, aurora, dog sleds, reindeer, frozen fjords, Viking history.
+  </div>
+
+  <h2 style="margin: 16px 0 12px;">🌌 Tromsø Activities</h2>
+  <div class="grid-2">
+    <div class="activity-card">
+      <h3>Aurora Safari by Bus <span class="pill pill-coral">Must-do</span></h3>
+      <p style="font-size:13px; color:var(--muted);">Guides chase clear skies across the region. Thermal suits, campfire, hot drinks included. Camp-style setting under the lights.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~960–1,200 NOK/adult (~$90–115)</span>
+        <span class="meta-item">⏱ 3–4 hrs</span>
+        <span class="meta-item">👶 Age 4+</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Husky Dog Sledding <span class="pill pill-coral">Must-do</span></h3>
+      <p style="font-size:13px; color:var(--muted);">Drive or ride as passenger. Arctic forest trail. Hot lunch. Meet 200 huskies. Kids loved by dogs.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~2,490 NOK/adult (~$240)</span>
+        <span class="meta-item">⏱ 4 hrs incl. transfer</span>
+        <span class="meta-item">👶 Ride: age 5+; Drive: 16+</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Reindeer + Sámi Culture <span class="pill pill-coral">Must-do</span></h3>
+      <p style="font-size:13px; color:var(--muted);">Feed reindeer, sled ride, Sámi guide tells stories, traditional food. Totally unique to Arctic.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~1,800–2,245 NOK/adult (~$175–215)</span>
+        <span class="meta-item">⏱ 4 hrs</span>
+        <span class="meta-item">👶 All ages</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Fjellheisen Cable Car</h3>
+      <p style="font-size:13px; color:var(--muted);">5-minute ride up to 421 m. Panoramic Arctic view. Snow play at top in winter. Very kid-friendly.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~285 NOK/adult (~$27)</span>
+        <span class="meta-item">⏱ 1–2 hrs</span>
+        <span class="meta-item">👶 All ages</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Northern Lights Fjord Cruise</h3>
+      <p style="font-size:13px; color:var(--muted);">Electric catamaran, zero light pollution, Arctic tapas on board. More comfortable than bus tour in bad weather.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~950–1,890 NOK/adult (~$90–180)</span>
+        <span class="meta-item">⏱ 2–3 hrs</span>
+        <span class="meta-item">👶 Age 3+</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Polaria Arctic Aquarium</h3>
+      <p style="font-size:13px; color:var(--muted);">World's northernmost aquarium. Bearded seals, arctic fish, immersive panoramic cinema. Great for the 4-year-old.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~150 NOK/adult, children free</span>
+        <span class="meta-item">⏱ 1–1.5 hrs</span>
+        <span class="meta-item">👶 Great for kids</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Arctic Cathedral</h3>
+      <p style="font-size:13px; color:var(--muted);">The iconic triangular church. Striking architecture. Worth visiting inside. Great photo spot at night with aurora.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~100 NOK/adult</span>
+        <span class="meta-item">⏱ 30–45 min</span>
+        <span class="meta-item">👶 All ages</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Tromsø Science Center</h3>
+      <p style="font-size:13px; color:var(--muted);">Interactive exhibits on Northern Lights, physics, nature. Planetarium shows (including aurora show). Perfect for the 8-year-old.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~100 NOK/adult, ~80 NOK child</span>
+        <span class="meta-item">⏱ 1.5–2 hrs</span>
+        <span class="meta-item">👶 Great for kids</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin: 20px 0 12px;">🏛 Oslo Activities</h2>
+  <div class="grid-2">
+    <div class="activity-card">
+      <h3>Fram Museum <span class="pill pill-blue">Recommended</span></h3>
+      <p style="font-size:13px; color:var(--muted);">The actual Fram polar ship, Arctic animal dioramas, explorer stories. Kids love climbing inside the ship.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~130 NOK/adult, ~65 NOK child</span>
+        <span class="meta-item">⏱ 1–1.5 hrs</span>
+        <span class="meta-item">👶 Great for kids</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Akershus Fortress <span class="pill pill-green">Free</span></h3>
+      <p style="font-size:13px; color:var(--muted);">Medieval castle by the waterfront. Free to walk grounds, explore walls. Guided tours available. Great for castle-loving kids.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 Free (grounds) / ~100 NOK museum</span>
+        <span class="meta-item">⏱ 1–2 hrs</span>
+        <span class="meta-item">👶 Very kid-friendly</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>The Viking Planet</h3>
+      <p style="font-size:13px; color:var(--muted);">Digital interactive Viking museum. VR experience, holograms. Best Viking option while Ship Museum is closed for renovation (reopens 2027).</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~$25–91 USD per person</span>
+        <span class="meta-item">⏱ 2 hrs</span>
+        <span class="meta-item">👶 Great for kids</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Vigeland Sculpture Park <span class="pill pill-green">Free</span></h3>
+      <p style="font-size:13px; color:var(--muted);">200+ sculptures in a large park. Free. Has a children's playground. Easy, no-pressure sightseeing. Unique to Norway.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 Free</span>
+        <span class="meta-item">⏱ 1.5–2 hrs</span>
+        <span class="meta-item">👶 All ages</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Kon-Tiki Museum</h3>
+      <p style="font-size:13px; color:var(--muted);">Thor Heyerdahl's balsa raft that crossed the Pacific. Fascinating for adults and school-age kids. Good storytelling displays.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~130 NOK/adult, ~65 NOK child</span>
+        <span class="meta-item">⏱ 1 hr</span>
+        <span class="meta-item">👶 Good for 8-yr-old</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Holmenkollen Ski Jump <span class="pill pill-blue">Optional</span></h3>
+      <p style="font-size:13px; color:var(--muted);">The world's most famous ski jump. Views alone are worth it. T-bane accessible. Kids are wowed by the structure.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~150 NOK adult (museum), view outside free</span>
+        <span class="meta-item">⏱ 1–2 hrs</span>
+        <span class="meta-item">👶 Kids enjoy the spectacle</span>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin: 20px 0 12px;">🎭 Optional / For Grown-Ups</h2>
+  <div class="card">
+    <table>
+      <tr><th>Activity</th><th>Notes</th><th>Cost</th><th>For Kids?</th></tr>
+      <tr>
+        <td><strong>Whale Watching (Tromsø)</strong></td>
+        <td>Season Nov–Jan only. See humpback whales and orcas in Arctic fjords. Very rare opportunity for SE Asians.</td>
+        <td>~1,500–2,000 NOK/adult</td>
+        <td>Age 3+ (check tour)</td>
+      </tr>
+      <tr>
+        <td><strong>Snowmobile Safari</strong></td>
+        <td>Drive your own snowmobile across Arctic landscape. Thrilling for adults.</td>
+        <td>~2,500–3,000 NOK/adult</td>
+        <td>Age 6+ as passenger</td>
+      </tr>
+      <tr>
+        <td><strong>Norsk Folkemuseum (Oslo)</strong></td>
+        <td>Open-air museum with 150+ traditional Norwegian buildings, folk costumes. Very atmospheric.</td>
+        <td>~200 NOK adult, ~80 NOK child</td>
+        <td>Fine for older kids</td>
+      </tr>
+      <tr>
+        <td><strong>Oslo Opera House Walk</strong></td>
+        <td>Roof is open to public. Free. Walk on top of the opera house — unusual architecture. Quick stop.</td>
+        <td>Free</td>
+        <td>All ages</td>
+      </tr>
+      <tr>
+        <td><strong>Ice Domes Snow Park (Tromsø)</strong></td>
+        <td>Structures built entirely of ice each winter. Short visit but visually stunning for first-timers.</td>
+        <td>~500–800 NOK (combo tours)</td>
+        <td>All ages</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- FOOD -->
+<div id="food" class="section">
+  <div class="highlight-box highlight-amber">
+    <strong>🍽 Norway is expensive for eating out</strong> — a restaurant meal for 4 can easily cost 800–1,500 NOK ($75–145 USD). The key strategy: <strong>breakfast at hotel, supermarket lunches, selective restaurant dinners.</strong>
+  </div>
+
+  <div class="card">
+    <h2>🛒 Supermarket Strategy (Most Important Money-Saver)</h2>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:10px;">Norway's supermarkets are excellent. Chains: <strong>Kiwi</strong>, <strong>Rema 1000</strong>, <strong>Coop Extra</strong>, <strong>MENY</strong> (premium). Open most days until 9–10 PM. You can buy: ready-made salads, sushi (surprisingly good Norwegian supermarket sushi), sandwiches, pastries, fruit, cheese, bread, pasta, milk, snacks, juice. Many hotels have microwaves or basic kitchenettes.</p>
+    <div class="highlight-box highlight-teal">
+      <strong>Sample supermarket family dinner cost:</strong> Bread + sliced ham + cheese + fruit + juice = ~150–200 NOK ($14–19 USD) for 4 people. Compare to ~1,000–1,500 NOK at a restaurant.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🍜 Food Recommendations</h2>
+    <table>
+      <tr><th>Type</th><th>What to Try</th><th>Where</th><th>Price Range</th></tr>
+      <tr>
+        <td><strong>Street / Fast</strong></td>
+        <td>Norwegian pølse (hot dog in a lompe/potato wrap). Kids love it. Classic street food.</td>
+        <td>Hot dog stands, gas stations (7-Eleven), supermarkets</td>
+        <td>~30–50 NOK ($3–5)</td>
+      </tr>
+      <tr>
+        <td><strong>Bakery</strong></td>
+        <td>Kanelbolle (cinnamon roll), skolebolle (custard roll), waffles. Norwegian pastries are excellent.</td>
+        <td>Baker Hansen, Godt Brød, local bakeries</td>
+        <td>~30–60 NOK each</td>
+      </tr>
+      <tr>
+        <td><strong>Supermarket ready meal</strong></td>
+        <td>Smoked salmon (Norwegian laks), open-faced sandwiches (smørbrød), sushi, salads</td>
+        <td>MENY or Coop for better quality</td>
+        <td>~80–150 NOK per meal</td>
+      </tr>
+      <tr>
+        <td><strong>Fish & Seafood</strong></td>
+        <td>Fish soup (fiskesuppe) — hearty, kids-friendly, warming. Cod (torsk) dishes.</td>
+        <td>Fish market stalls in Oslo/Tromsø waterfront</td>
+        <td>~150–250 NOK/bowl</td>
+      </tr>
+      <tr>
+        <td><strong>Traditional Norwegian</strong></td>
+        <td>Reindeer stew (bidos) — served on many tours. Very flavorful. Arctic char. Brown cheese (brunost) on toast.</td>
+        <td>Tour meals, casual restaurants</td>
+        <td>~200–350 NOK/main</td>
+      </tr>
+      <tr>
+        <td><strong>Asian (homesick food)</strong></td>
+        <td>Oslo has several Thai restaurants (Thaikhun area). Tromsø has a few Asian options. Good when kids refuse Norwegian food.</td>
+        <td>Oslo: Grünerløkka area. Tromsø: ask hotel</td>
+        <td>~150–250 NOK/person</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🍼 Kids Food Tips</h2>
+    <p style="font-size:14px; color:var(--muted);">Norwegian food is generally mild, clean, and allergen-labeled. Most restaurants have kids menus. Pasta with butter is available everywhere if kids are picky. Pizza is widely available and cheap (Peppes Pizza chain, REMA frozen). Norwegian chocolate (Freia, Kvikk Lunsj) is excellent and will delight the kids. Bring some familiar Thai snacks from home — instant noodles, etc. — for emergencies.</p>
+  </div>
+</div>
+
+<!-- HOTELS -->
+<div id="hotels" class="section">
+  <div class="highlight-box highlight-blue">
+    <strong>🏨 Hotel Strategy:</strong> Choose apartments or family rooms over double rooms where possible. Airbnb with kitchen can dramatically reduce food costs in Norway. For hotels, look at Scandic, Thon, and Citybox chains — they are mid-range, reliable, and family-friendly. Avoid luxury hotels (not needed) and shared hostels (not wanted).
+  </div>
+
+  <h2 style="margin: 16px 0 12px;">Oslo (3 nights)</h2>
+  <div class="grid-2">
+    <div class="activity-card">
+      <h3>Citybox Oslo <span class="pill pill-green">Budget-friendly</span></h3>
+      <p style="font-size:13px; color:var(--muted);">Modern, central, clean. Private rooms with en-suite bathrooms. Simple but comfortable. Perfect for a family that's only sleeping and going out.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~800–1,200 NOK/night for family room</span>
+        <span class="meta-item">📍 Very central</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Scandic Byporten / Grensen</h3>
+      <p style="font-size:13px; color:var(--muted);">Reliable Scandic chain. Family rooms available. Breakfast included option (worth it — saves morning cost). Central location.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~1,200–1,800 NOK/night</span>
+        <span class="meta-item">📍 Central Oslo</span>
+      </div>
+    </div>
+  </div>
+  <div class="tip-box">
+    <strong>💡 Best value:</strong> Book an Airbnb apartment near Grünerløkka or Frogner with a kitchen. Same price or less than a hotel, and you can cook/store food. For a family of 4 for 3 nights, this can save ~3,000–5,000 NOK vs eating out for every meal.
+  </div>
+
+  <h2 style="margin: 20px 0 12px;">Tromsø (5 nights)</h2>
+  <div class="grid-2">
+    <div class="activity-card">
+      <h3>Thon Hotel Polar <span class="pill pill-teal">Good value</span></h3>
+      <p style="font-size:13px; color:var(--muted);">Well-located, family rooms, breakfast included. Central Tromsø. Breakfast buffet with Norwegian fare. Reliable chain.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~1,200–1,600 NOK/night</span>
+        <span class="meta-item">📍 City center</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Scandic Ishavshotel</h3>
+      <p style="font-size:13px; color:var(--muted);">Located right on the waterfront. Great view of the Arctic Cathedral across the sound. Slightly pricier but memorable location.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~1,400–2,000 NOK/night</span>
+        <span class="meta-item">📍 Waterfront</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Smarthotel Tromsø <span class="pill pill-green">Most budget</span></h3>
+      <p style="font-size:13px; color:var(--muted);">Budget chain hotel, private rooms with private bathrooms. Clean, functional. No frills. Perfect if you're spending most money on activities.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~900–1,200 NOK/night</span>
+        <span class="meta-item">📍 Central</span>
+      </div>
+    </div>
+    <div class="activity-card">
+      <h3>Aurora Airbnb apartment</h3>
+      <p style="font-size:13px; color:var(--muted);">Several apartments near the bridge with south-facing windows. Kitchen saves food costs. Ask host about aurora visibility from windows.</p>
+      <div class="activity-meta">
+        <span class="meta-item">💰 ~1,000–1,500 NOK/night</span>
+        <span class="meta-item">📍 Various — check map</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <strong>💡 Important:</strong> Book Tromsø accommodation at least 3–4 months ahead for winter peak season, especially October–February. Tromsø gets very busy with aurora tourists and availability disappears fast. The best budget options go first.
+  </div>
+</div>
+
+<!-- AURORA -->
+<div id="aurora" class="section">
+  <div class="card">
+    <h2>🌌 Understanding Aurora Hunting</h2>
+    <p style="font-size:14px; color:var(--muted); margin-bottom:12px;">The Northern Lights require: (1) sufficient solar activity, (2) darkness, and (3) clear skies. You can predict #1 and #2 — but not #3. This is why staying 5+ nights in Tromsø dramatically increases your chances.</p>
+    
+    <div class="highlight-box highlight-teal">
+      <strong>2025–2026 is special.</strong> Solar activity is at its peak in 11 years. Auroras are stronger, more colorful, and visible further south. This is genuinely one of the best windows in a decade to visit Norway for northern lights.
+    </div>
+
+    <h3 style="margin-top:14px;">Essential Apps to Download Before You Go</h3>
+    <div style="display:flex; flex-direction:column; gap:6px; margin-top:8px; font-size:14px;">
+      <div>📱 <strong>Aurora Forecast</strong> — simple KP index and cloud cover overlay. Best for quick checks.</div>
+      <div>📱 <strong>Space Weather Live</strong> — more detailed solar wind data. Check Bz (south = good) and solar wind speed.</div>
+      <div>📱 <strong>Yr.no</strong> — Norwegian weather app, very accurate for local cloud cover. Essential.</div>
+      <div>📱 <strong>My Aurora Forecast</strong> — beginner-friendly with hourly predictions and notifications.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 How to Read a Forecast</h2>
+    <table>
+      <tr><th>KP Index</th><th>What It Means</th><th>What to Do</th></tr>
+      <tr><td>KP 1–2</td><td>Low activity — faint aurora, only visible with camera</td><td>Go out anyway if skies are clear — cameras see more than eyes</td></tr>
+      <tr><td>KP 3–4</td><td>Moderate — visible to naked eye, green curtains possible</td><td>Join a guided tour. Don't miss this.</td></tr>
+      <tr><td>KP 5+</td><td>Strong — vivid colors, dances across the sky</td><td>Get out immediately regardless of time. Alert the family. This is the show.</td></tr>
+      <tr><td>KP 7+</td><td>Severe geomagnetic storm — extraordinary lights</td><td>Wake everyone up. This is once in years.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>📸 Aurora Photography Tips for Thai Travelers</h2>
+    <p style="font-size:14px; color:var(--muted);">Most modern smartphones can capture the aurora with night mode. For iPhone: Night Mode auto, keep still or use a mini tripod. For Android: Pro/Night mode, ISO 800–3200, shutter 3–8 seconds. <strong>Guided tours usually include professional aurora photos of your family at no extra cost</strong> — ask when booking.</p>
+    <div class="tip-box" style="margin-top:10px;">
+      <strong>💡 Reality check:</strong> The aurora often looks greenish-white to the naked eye but appears vivid green/pink/purple on camera. Don't be disappointed if it looks faint visually — your camera will capture far more.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🧥 What to Wear</h2>
+    <p style="font-size:14px; color:var(--muted);">For Thai families, this may be the coldest experience of your lives. Temperatures in Tromsø in winter range from -5°C to -20°C. Guided tours provide thermal overalls and boots. But underneath, you need:</p>
+    <div style="margin-top:10px; font-size:14px; display:flex; flex-direction:column; gap:6px;">
+      <div>🧤 <strong>Base layer (thermal):</strong> Buy merino wool or synthetic thermals for all 4 of you. Can be bought cheaply at Clas Ohlson stores in Oslo or Norwegian sports shops.</div>
+      <div>🧣 <strong>Mid layer:</strong> A fleece or wool sweater.</div>
+      <div>🧥 <strong>Outer layer:</strong> Tours provide this, but having your own waterproof jacket helps.</div>
+      <div>👢 <strong>Boots:</strong> Tours provide winter boots, but bring warm socks. Wool socks, 2 pairs for each person.</div>
+      <div>🎿 <strong>Kids especially:</strong> Layer them up — they lose heat faster. A good balaclava/hat is essential.</div>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin-top:8px;">You can buy much of this at H&M, Decathlon or Clas Ohlson in Oslo on Day 3 before heading north — Norway has good winter gear at reasonable prices.</p>
+  </div>
+</div>
+
+<!-- BUDGET -->
+<div id="budget" class="section">
+  <div class="highlight-box highlight-amber">
+    <strong>Currency:</strong> Norwegian Krone (NOK). As of 2025: ~10.5 NOK = $1 USD ≈ ~37 THB. All prices below in USD for easier reference. Norway is one of Europe's most expensive countries — budget carefully. Credit cards accepted almost everywhere, even food trucks.
+  </div>
+
+  <div class="card">
+    <h2>✈️ Flights Estimate (Family of 4)</h2>
+    <div class="budget-total">
+      <div class="budget-row"><span>CNX ↔ BKK x4 (budget airline)</span><span>~$240</span></div>
+      <div class="budget-row"><span>BKK ↔ OSL x4 (Thai Airways or Qatar, round-trip)</span><span>~$4,800–5,600</span></div>
+      <div class="budget-row"><span>OSL ↔ TOS x4 (SAS/Norwegian, round-trip)</span><span>~$600–900</span></div>
+      <div class="budget-row" style="margin-top:6px; padding-top:6px; border-top:2px solid var(--border);"><span><strong>Total Flights</strong></span><span><strong>~$5,640–6,740</strong></span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🏨 Accommodation (11 nights)</h2>
+    <div class="budget-total">
+      <div class="budget-row"><span>Oslo: 3 nights x ~$130/night family room</span><span>~$390</span></div>
+      <div class="budget-row"><span>Tromsø: 5 nights x ~$140/night family room</span><span>~$700</span></div>
+      <div class="budget-row"><span>2 travel nights (included in flight/transit)</span><span>—</span></div>
+      <div class="budget-row" style="margin-top:6px; padding-top:6px; border-top:2px solid var(--border);"><span><strong>Total Hotels</strong></span><span><strong>~$1,090</strong></span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Activities (Family of 4 — selected)</h2>
+    <div class="budget-total">
+      <div class="budget-row"><span>Oslo Pass 2 days x2 adults ($65) + kids ($35)</span><span>~$200</span></div>
+      <div class="budget-row"><span>Viking Planet Oslo (~$25 x2 adults + $15 kids)</span><span>~$80</span></div>
+      <div class="budget-row"><span>Aurora Safari bus x2 adults ($95 x2)</span><span>~$190</span></div>
+      <div class="budget-row"><span>Fjellheisen cable car x4</span><span>~$75</span></div>
+      <div class="budget-row"><span>Husky Dog Sledding x4 (~$240 adult, $140 child x2)</span><span>~$760</span></div>
+      <div class="budget-row"><span>Reindeer + Sámi tour x4 (~$200 adult, $100 x2 children)</span><span>~$600</span></div>
+      <div class="budget-row"><span>Polaria Aquarium x4</span><span>~$40</span></div>
+      <div class="budget-row"><span>Tromsø Science Center x4</span><span>~$36</span></div>
+      <div class="budget-row"><span>Misc. museums, ferry, small entries</span><span>~$100</span></div>
+      <div class="budget-row" style="margin-top:6px; padding-top:6px; border-top:2px solid var(--border);"><span><strong>Total Activities</strong></span><span><strong>~$2,081</strong></span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🍽 Food (11 days)</h2>
+    <div class="budget-total">
+      <div class="budget-row"><span>Supermarket meals x4 (breakfast + most lunches) ~$25/day</span><span>~$275</span></div>
+      <div class="budget-row"><span>Restaurant dinners ~3x in Oslo (~$100/meal)</span><span>~$300</span></div>
+      <div class="budget-row"><span>Restaurant dinners ~2x in Tromsø (~$100/meal)</span><span>~$200</span></div>
+      <div class="budget-row"><span>Bakeries, hot dogs, coffee, snacks</span><span>~$150</span></div>
+      <div class="budget-row"><span>Tour meals included (husky, reindeer, aurora)</span><span>$0</span></div>
+      <div class="budget-row" style="margin-top:6px; padding-top:6px; border-top:2px solid var(--border);"><span><strong>Total Food</strong></span><span><strong>~$925</strong></span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💰 Total Trip Estimate</h2>
+    <div class="budget-total">
+      <div class="budget-row"><span>Flights (family of 4)</span><span>$5,640–6,740</span></div>
+      <div class="budget-row"><span>Hotels</span><span>$1,090</span></div>
+      <div class="budget-row"><span>Activities</span><span>$2,081</span></div>
+      <div class="budget-row"><span>Food</span><span>$925</span></div>
+      <div class="budget-row"><span>Transport (local buses, airport trains)</span><span>~$150</span></div>
+      <div class="budget-row"><span>Warm clothing shopping in Oslo (thermals etc.)</span><span>~$200</span></div>
+      <div class="budget-row"><span>Miscellaneous + buffer (10%)</span><span>~$1,000</span></div>
+      <div class="budget-row" style="margin-top:8px; padding-top:8px; border-top:2.5px solid var(--border); font-size:16px;"><span>🧮 <strong>Total Estimate</strong></span><span><strong>$11,086–12,186 USD</strong><br><span style="font-size:12px; font-weight:400; color:var(--muted);">(~400,000–440,000 THB)</span></span></div>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin-top:12px;">This is a mid-range estimate. You can trim ~$1,500–2,000 by flying Qatar instead of Thai, cooking more, and skipping 1–2 activities. The flight is the largest single cost — book early for best fares.</p>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
